@@ -65,6 +65,10 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .error-box{background:#fdf2f2;border:1px solid #f5c6cb;border-radius:8px;padding:14px 16px;color:#c0392b;font-size:13px;line-height:1.7}
 .error-box strong{display:block;margin-bottom:4px}
 .footer{text-align:center;padding:2rem;font-size:12px;color:var(--text3)}
+.result table{width:100%;border-collapse:collapse;margin:0.8rem 0;font-size:13px}
+.result th{background:var(--surface2);padding:8px 12px;text-align:left;font-weight:600;border:1px solid var(--border);color:var(--text)}
+.result td{padding:7px 12px;border:1px solid var(--border);color:var(--text);vertical-align:top}
+.result tr:nth-child(even) td{background:var(--surface2)}
 @media(max-width:600px){.pipeline{grid-template-columns:repeat(3,1fr)}.topbar{padding:12px 16px}.main{padding:1rem}.content-header{flex-direction:column;gap:10px;align-items:flex-start}}
 </style>
 </head>
@@ -162,6 +166,22 @@ function clearStageCache(){
 }
 
 function parseMarkdown(t){
+  // 제목(# 으로 시작) 및 --- 제거
+  t=t.replace(/^#{1,3} .+\n?/gm,'').replace(/^---+\n?/gm,'');
+  // 표 파싱
+  t=t.replace(/(\|.+\|\n)+/g,function(tb){
+    const rows=tb.trim().split('\n').filter(r=>!/^\|[-| :]+\|$/.test(r.trim()));
+    if(!rows.length)return '';
+    let h='<table><thead><tr>';
+    rows[0].split('|').filter((_,i,a)=>i>0&&i<a.length-1).forEach(c=>{h+=`<th>${c.trim()}</th>`;});
+    h+='</tr></thead><tbody>';
+    rows.slice(1).forEach(row=>{
+      h+='<tr>';
+      row.split('|').filter((_,i,a)=>i>0&&i<a.length-1).forEach(c=>{h+=`<td>${c.trim()}</td>`;});
+      h+='</tr>';
+    });
+    return h+'</tbody></table>';
+  });
   return t
     .replace(/^### (.+)$/gm,'<h3>$1</h3>')
     .replace(/^## (.+)$/gm,'<h3>$1</h3>')
