@@ -112,8 +112,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 <div class="main">
   <div class="industry-bar">
     <label>업종</label>
-    <input type="text" id="industryInput" value="제조장비" placeholder="예: 반도체 장비, SaaS, 의료기기..." oninput="updateBadge()"/>
-    <span class="industry-badge" id="industryBadge">제조장비</span>
+    <input type="text" id="industryInput" value="" placeholder="업종을 입력하세요 (예: 제조장비, 반도체, SaaS...)" oninput="updateBadge()"/>
+    <span class="industry-badge" id="industryBadge">업종 미입력</span>
   </div>
 
   <div class="pipeline">
@@ -166,7 +166,7 @@ const STAGES = {
     prompt:i=>`당신은 Key Account Management 전문가입니다. ${i} 업종의 핵심 고객사 관리 전략을 작성해주세요.\n\n### 1. KA 선별 기준\n정량/정성 지표 기반 선별 기준을 점수표와 함께 제시해주세요.\n\n### 2. 관계 심화 로드맵\n담당자 → 임원 → 파트너십 단계별 전략과 타임라인을 서술해주세요.\n\n### 3. QBR 구성 가이드\n분기 비즈니스 리뷰 아젠다, 핵심 내용, 발표 순서를 작성해주세요.\n\n### 4. 전략적 파트너십 시나리오\n3가지 파트너십 유형과 각각의 제안 방법을 제시해주세요.\n\n### 5. KA 위험 관리\n경쟁사 방어 전략과 관계 위기 시 단계별 대응법을 서술해주세요.\n\n한국어로, 마크다운(###, -)을 사용해 구조화해주세요.`}
 };
 
-function updateBadge(){document.getElementById('industryBadge').textContent=document.getElementById('industryInput').value||'제조장비'}
+function updateBadge(){const v=document.getElementById('industryInput').value;document.getElementById('industryBadge').textContent=v||'업종 미입력';document.getElementById('industryBadge').style.background=v?'var(--blue-bg)':'#f5f0e8';}
 
 function selectStage(n){
   currentStage=n;
